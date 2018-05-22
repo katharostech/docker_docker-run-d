@@ -1,0 +1,5 @@
+# Docker Run -d
+
+This is a *very* simple container that will run a container that you specify. This may seem completely ridiculous, but it *does* have a very specific use case: running a privileged container as a Swarm service. Docker Swarm does not allow running privileged containers as services. This container is a workaround. Create a swarm service that runs this container and mounts the Docker socket into it ( something that *is* allowed on swarm ), and pass in whatever parameters you want ( including the possibility of the `--privilged` flag ) to a `docker run -d` command that will be run as a standalone container on the host.
+
+When this container receives a SIGTERM or SIGINT signal it will `docker stop` and `docker rm` the container that you tell it to run. This makes it behave as much like a Swarm service as possible. Don't forget that the container that you run *is* a **standalone container**. If you want the container to run on the same network as your swarm stack you must specify that in the run command. For example: `--net stackname_networkname`.
